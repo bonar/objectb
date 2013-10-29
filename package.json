@@ -1,0 +1,27 @@
+{
+  "name": "objectb",
+  "version": "0.1.0",
+  "description": "Old-school OOP on JavaScript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bonar/objectb.git"
+  },
+  "keywords": [
+    "object",
+    "oop",
+    "aop"
+  ],
+  "author": "bonar@me.com <Nakano Kyohei>",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/bonar/objectb/issues"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-jshint": "~0.7.0"
+  }
+}
