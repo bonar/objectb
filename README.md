@@ -1,13 +1,12 @@
 objectb
 =======
 
+SEE docs/usage.html
 
+# Development setup
 
-
-h1. Development setup
-
-  npm install -g grunt
-  npm install -g jshint
+    npm install -g grunt
+    npm install -g jshint
 
 
 
