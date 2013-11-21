@@ -47,6 +47,53 @@ describe('ObjectB.Class', function() {
 
     });
 
+    describe('applying spec', function() {
+      
+      it('class method', function() {
+        var FilePath = ObjectB.Class.define('FilePath', function() {
+          this.classMethod({
+            join: function(a, b) {
+              return [a, b].join('/');
+            },
+            split: function(path) {
+              return path.split("/");
+            }
+          });
+        });
+        expect(FilePath.join('usr', 'bin'))
+          .toEqual('usr/bin');
+        expect(FilePath.split('/tmp/test.txt'))
+          .toEqual(['', 'tmp', 'test.txt']);
+      });
+
+      it('class attributes', function() {
+        var FilePath = ObjectB.Class.define('FilePath', function() {
+          this.classAttr({
+            DELIMITER: '/',
+            HOME_DIR: '/home/'
+          });
+        });
+        expect(FilePath.DELIMITER).toEqual('/');
+        expect(FilePath.HOME_DIR).toEqual('/home/');
+      });
+
+      describe('instance', function() {
+        var FilePath = ObjectB.Class.define('FilePath', function() {
+          this.instanceAttr({
+            path: null,
+            
+            HOME_DIR: '/home/'
+          });
+        });
+
+        it('instance method', function() {
+
+        });
+
+      });
+
+    });
+
   });
 
 });
