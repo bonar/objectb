@@ -80,14 +80,28 @@ describe('ObjectB.Class', function() {
       describe('instance', function() {
         var FilePath = ObjectB.Class.define('FilePath', function() {
           this.instanceAttr({
-            path: null,
-            
-            HOME_DIR: '/home/'
+            filename: "test.txt",
+            permission: 755
           });
         });
 
-        it('instance method', function() {
+        it('creates instance accessor', function() {
+          var path = new FilePath();
+          expect(path.getFilename).toBeTruthy();
+          expect(path.setFilename).toBeTruthy();
+        });
 
+        it('stores defaults', function() {
+          var path = new FilePath();
+          expect(path.getFilename()).toEqual("test.txt");
+          expect(path.getPermission()).toEqual(755);
+        });
+
+        it('creates default setters/getters that work', function() {
+          var path = new FilePath();
+          expect(path.getFilename()).toEqual("test.txt");
+          path.setFilename("fuga.txt");
+          expect(path.getFilename()).toEqual("fuga.txt");
         });
 
       });

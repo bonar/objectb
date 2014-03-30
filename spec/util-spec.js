@@ -1,6 +1,25 @@
 
 describe("Utility", function() {
 
+  describe("ucfirst", function() {
+
+    it("make first char upper case", function() {
+      expect(ObjectB.ucfirst("foo")).toEqual("Foo");
+      expect(ObjectB.ucfirst("name")).toEqual("Name");
+      expect(ObjectB.ucfirst("Name")).toEqual("Name");
+      expect(ObjectB.ucfirst("NAME")).toEqual("NAME");
+    });
+
+    it("returns upper case string for char", function() {
+      expect(ObjectB.ucfirst("f")).toEqual("F");
+    });
+
+    it("returns empty string for empty string", function() {
+      expect(ObjectB.ucfirst("")).toEqual("");
+    });
+
+  });
+
   describe("isObject", function() {
 
     it("returns true on object", function() {
