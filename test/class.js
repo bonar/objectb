@@ -2,8 +2,6 @@ var ObjectB = require('../objectb');
 var chai = require('chai')
 var expect = chai.expect;
 
-var util = require('util');
-
 describe('ObjectB.Class', function() {
 
   describe('define', function() {
