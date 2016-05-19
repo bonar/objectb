@@ -61,20 +61,20 @@ typeof text; // "File"
 file instanceof File; // true
 ```
 
-# ToDo
+## ToDo
 
 * extend class
 * implementation mixin
 
-# Install
+## Install
 
     npm install objectb
 
-# Running test
+## Running test
 
     npm test
 
-# LICENSE
+## LICENSE
 
 BSD-2-Clause
 
