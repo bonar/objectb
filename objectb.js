@@ -1,50 +1,55 @@
 
 var ObjectB = {};
 
-ObjectB.Spec = function() {
-  this._classMethod     = {};
-  this._classAttr       = {};
-  this._instanceMethod  = {};
-  this._instanceAttr    = {};
-  this._initialize      = function(param) {};
+ObjectB.ClassSpec = function(konstructor) {
+  this.constructor = konstructor;
 };
-ObjectB.Spec.prototype = {
+ObjectB.ClassSpec.prototype = {
 
-  _access: function(key, param) {
-    var propName = '_' + key;
-    // getter access
-    if (!param) { 
-        return this[propName];
-    }
-    // setter access
-    if (isObject(this[propName])) {
-      extend(this[propName], param);
-    } else {
-      this[propName] = param;
-    }
+  method: function(param) {
+    var self = this;
+    eachKV(param, function(key, val) {
+      self.constructor[key] = val;
+    });
   },
 
-  classMethod: function(param) {
-    return this._access('classMethod', param);
+  attr: function(param) {
+    var self = this;
+    eachKV(param, function(key, val) {
+      self.constructor[key] = val;
+    });
+  }
+}
+
+ObjectB.InstanceSpec = function(konstructor) {
+  this.constructor = konstructor;
+};
+ObjectB.InstanceSpec.prototype = {
+
+  method: function(param) {
+    eachKV(param, function(key, val) {
+      this.constructor.prototype[key] = val
+    });
   },
 
-  classAttr: function(param) {
-    return this._access('classAttr', param);
-  },
-
-  instanceMethod: function(param) {
-    return this._access('instanceMethod', param);
-  },
-
-  instanceAttr: function(param) {
-    return this._access('instanceAttr', param);
-  },
-
-  initialize: function(fn) {
-    return this._access('initialize', fn);
+  attr: function(param) {
+    eachKV(param, function(key, defaultVal) {
+      var accessorKey = ucfirst(key);
+      constructor.prototype["set" + accessorKey] = function(v) {
+        this[key] = v;
+        return v;
+      };
+      constructor.prototype["get" + accessorKey] = function() {
+        if (this.hasOwnProperty(key)) {
+          return this[key];
+        } else {
+          return defaultVal;
+        }
+      };
+    });
   }
 
-};
+}
 
 ObjectB.Class = {
 
@@ -87,49 +92,11 @@ ObjectB.Class = {
     return constructor;
   },
 
-  applySpec: function(constructor, spec) {
-
-    eachKV(spec.classMethod(), function(key, val) {
-      constructor[key] = val;
-    });
-
-    eachKV(spec.classAttr(), function(key, val) {
-      constructor[key] = val;
-    });
-
-    eachKV(spec.instanceMethod(), function(key, val) {
-      constructor.prototype[key] = val;
-    });
-
-    eachKV(spec.instanceAttr(), function(key, val) {
-      var accessorKey = ucfirst(key);
-      constructor.prototype["set" + accessorKey] = function(v) {
-        this[key] = v;
-        return v;
-      };
-      constructor.prototype["get" + accessorKey] = function() {
-        return this[key];
-      };
-    });
-
-    constructor.prototype._initialize = function(args) {
-      var self = this;
-
-      eachKV(spec.instanceAttr(), function(key, val) {
-        self[key] = val;
-      });
-
-    };
-
-  },
-
   define: function(name, builder) {
-    var spec = new ObjectB.Spec();
-    builder.call(spec);
-
-    var constructor = ObjectB.Class.createDefaultConstructor(name);
-    ObjectB.Class.applySpec(constructor, spec);
-
+    var constructor  = ObjectB.Class.createDefaultConstructor(name);
+    var classSpec    = new ObjectB.ClassSpec(constructor);
+    var instanceSpec = new ObjectB.InstanceSpec(constructor)
+    builder.call(this, classSpec, instanceSpec);
     return constructor;
   }
 
@@ -177,8 +144,6 @@ function extend(dst, src) {
   });
   return dst;
 }
-
-
 
 module.exports = {
   ucfirst: ucfirst,

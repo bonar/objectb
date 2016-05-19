@@ -2,6 +2,8 @@ var ObjectB = require('../objectb');
 var chai = require('chai')
 var expect = chai.expect;
 
+var util = require('util');
+
 describe('ObjectB.Class', function() {
 
   describe('define', function() {
@@ -28,7 +30,7 @@ describe('ObjectB.Class', function() {
       expect(myClass.isa(otherClass)).to.be.false;
     });
 
-    describe('instance', function() {
+    describe('class type detection', function() {
 
       var instance = new myClass();
 
@@ -50,11 +52,14 @@ describe('ObjectB.Class', function() {
 
     });
 
-    describe('applying spec', function() {
+    describe('define class/instance specs', function() {
       
-      it('class method', function() {
-        var FilePath = ObjectB.Class.define('FilePath', function() {
-          this.classMethod({
+      describe('class', function() {
+
+        var FilePath = ObjectB.Class.define(
+          'FilePath', function(klass, instance) {
+
+          klass.method({
             join: function(a, b) {
               return [a, b].join('/');
             },
@@ -62,27 +67,31 @@ describe('ObjectB.Class', function() {
               return path.split("/");
             }
           });
-        });
-        expect(FilePath.join('usr', 'bin'))
-          .to.equal('usr/bin');
-        expect(FilePath.split('/tmp/test.txt'))
-          .to.deep.equal(['', 'tmp', 'test.txt']);
-      });
 
-      it('class attributes', function() {
-        var FilePath = ObjectB.Class.define('FilePath', function() {
-          this.classAttr({
+          klass.attr({
             DELIMITER: '/',
             HOME_DIR: '/home/'
           });
         });
-        expect(FilePath.DELIMITER).to.equal('/');
-        expect(FilePath.HOME_DIR).to.equal('/home/');
+
+        it('class method', function() {
+          expect(FilePath.join('usr', 'bin'))
+            .to.equal('usr/bin');
+          expect(FilePath.split('/tmp/test.txt'))
+            .to.deep.equal(['', 'tmp', 'test.txt']);
+        });
+
+        it('class attributes', function() {
+          expect(FilePath.DELIMITER).to.equal('/');
+          expect(FilePath.HOME_DIR).to.equal('/home/');
+        });
+
       });
 
       describe('instance', function() {
-        var FilePath = ObjectB.Class.define('FilePath', function() {
-          this.instanceAttr({
+        var FilePath = ObjectB.Class.define(
+          'FilePath', function(klass, instance) {
+          instance.attr({
             filename: "test.txt",
             permission: 755
           });
