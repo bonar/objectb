@@ -1,3 +1,6 @@
+var ObjectB = require('../objectb');
+var chai = require('chai')
+var expect = chai.expect;
 
 describe('ObjectB.Class', function() {
 
@@ -10,19 +13,19 @@ describe('ObjectB.Class', function() {
       'otherClass', function() {});
 
     it('creates constructor', function() {
-      expect(typeof myClass).toEqual('function');
+      expect(typeof myClass).to.equal('function');
     });
 
     it('constructor knows its own name', function() {
-      expect(myClass.getName()).toEqual('myClass');
+      expect(myClass.getName()).to.equal('myClass');
     });
 
     it('tells whether it isa() given class', function() {
-      expect(myClass.isa('myClass')).toBeTruthy();
-      expect(myClass.isa(myClass)).toBeTruthy();
+      expect(myClass.isa('myClass')).to.be.ok;
+      expect(myClass.isa(myClass)).to.be.ok;
 
-      expect(myClass.isa('otherClass')).toBeFalsy();
-      expect(myClass.isa(otherClass)).toBeFalsy();
+      expect(myClass.isa('otherClass')).to.be.false;
+      expect(myClass.isa(otherClass)).to.be.false;
     });
 
     describe('instance', function() {
@@ -30,19 +33,19 @@ describe('ObjectB.Class', function() {
       var instance = new myClass();
 
       it('is typeof object', function() {
-        expect(typeof instance).toEqual('object');
+        expect(typeof instance).to.equal('object');
       });
 
       it('is onstanceof myClass', function() {
-        expect(instance instanceof myClass).toBeTruthy();
+        expect(instance instanceof myClass).to.be.ok;
       });
 
       it('isa() tells whether its a instance of given class', function() {
-        expect(instance.isa('myClass')).toBeTruthy();
-        expect(instance.isa(myClass)).toBeTruthy();
+        expect(instance.isa('myClass')).to.be.ok;
+        expect(instance.isa(myClass)).to.be.ok;
 
-        expect(instance.isa('otherClass')).toBeFalsy();
-        expect(instance.isa(otherClass)).toBeFalsy();
+        expect(instance.isa('otherClass')).to.be.false;
+        expect(instance.isa(otherClass)).to.be.false;
       });
 
     });
@@ -61,9 +64,9 @@ describe('ObjectB.Class', function() {
           });
         });
         expect(FilePath.join('usr', 'bin'))
-          .toEqual('usr/bin');
+          .to.equal('usr/bin');
         expect(FilePath.split('/tmp/test.txt'))
-          .toEqual(['', 'tmp', 'test.txt']);
+          .to.deep.equal(['', 'tmp', 'test.txt']);
       });
 
       it('class attributes', function() {
@@ -73,8 +76,8 @@ describe('ObjectB.Class', function() {
             HOME_DIR: '/home/'
           });
         });
-        expect(FilePath.DELIMITER).toEqual('/');
-        expect(FilePath.HOME_DIR).toEqual('/home/');
+        expect(FilePath.DELIMITER).to.equal('/');
+        expect(FilePath.HOME_DIR).to.equal('/home/');
       });
 
       describe('instance', function() {
@@ -87,27 +90,26 @@ describe('ObjectB.Class', function() {
 
         it('creates instance accessor', function() {
           var path = new FilePath();
-          expect(path.getFilename).toBeTruthy();
-          expect(path.setFilename).toBeTruthy();
+          expect(path.getFilename).to.be.ok;
+          expect(path.setFilename).to.be.ok;
         });
 
         it('stores defaults', function() {
           var path = new FilePath();
-          expect(path.getFilename()).toEqual("test.txt");
-          expect(path.getPermission()).toEqual(755);
+          expect(path.getFilename()).to.equal("test.txt");
+          expect(path.getPermission()).to.equal(755);
         });
 
         it('creates default setters/getters that work', function() {
           var path = new FilePath();
-          expect(path.getFilename()).toEqual("test.txt");
+          expect(path.getFilename()).to.equal("test.txt");
           path.setFilename("fuga.txt");
-          expect(path.getFilename()).toEqual("fuga.txt");
+          expect(path.getFilename()).to.equal("fuga.txt");
         });
 
       });
 
     });
-
   });
 
 });

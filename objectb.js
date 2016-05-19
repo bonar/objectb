@@ -1,52 +1,5 @@
 
-(function() {
-
-ObjectB = { // Utiliy functions
-
-  ucfirst: function(str) {
-    var length = str.length;
-    if (0 === length) {
-      return "";
-    } else if (1 === length) {
-      return str.toUpperCase();
-    }
-    var first = str.charAt(0);
-    var rest  = str.slice(1);
-    return first.toUpperCase() + rest;
-  },
-
-  is: function(obj, constructorName) {
-    return (obj && constructorName === (obj.constructor.name));
-  },
-
-  isObject: function(obj) {
-    return ObjectB.is(obj, 'Object');
-  },
-
-  isFunction: function(obj) {
-    return ObjectB.is(obj, 'Function');
-  },
-
-  eachKV: function(obj, fn) {
-    if (!ObjectB.isObject(obj)) {
-      return;
-    }
-    for (var key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        fn.call(obj, key, obj[key]);
-      }
-    }
-    return obj;
-  },
-
-  extend: function(dst, src) {
-    ObjectB.eachKV(src, function(key, val) {
-      dst[key] = val;
-    });
-    return dst;
-  }
-
-};
+var ObjectB = {};
 
 ObjectB.Spec = function() {
   this._classMethod     = {};
@@ -64,8 +17,8 @@ ObjectB.Spec.prototype = {
         return this[propName];
     }
     // setter access
-    if (ObjectB.isObject(this[propName])) {
-      ObjectB.extend(this[propName], param);
+    if (isObject(this[propName])) {
+      extend(this[propName], param);
     } else {
       this[propName] = param;
     }
@@ -111,7 +64,7 @@ ObjectB.Class = {
       if (!klass) {
         return false;
       }
-      var klassName = ObjectB.isFunction(klass.getName) ?
+      var klassName = isFunction(klass.getName) ?
         klass.getName() : klass.toString();
 
       if (name === klassName) {
@@ -136,37 +89,37 @@ ObjectB.Class = {
 
   applySpec: function(constructor, spec) {
 
-    ObjectB.eachKV(spec.classMethod(), function(key, val) {
+    eachKV(spec.classMethod(), function(key, val) {
       constructor[key] = val;
     });
 
-    ObjectB.eachKV(spec.classAttr(), function(key, val) {
+    eachKV(spec.classAttr(), function(key, val) {
       constructor[key] = val;
     });
 
-    ObjectB.eachKV(spec.instanceMethod(), function(key, val) {
+    eachKV(spec.instanceMethod(), function(key, val) {
       constructor.prototype[key] = val;
     });
 
-    ObjectB.eachKV(spec.instanceAttr(), function(key, val) {
-      var accessorKey = ObjectB.ucfirst(key);
+    eachKV(spec.instanceAttr(), function(key, val) {
+      var accessorKey = ucfirst(key);
       constructor.prototype["set" + accessorKey] = function(v) {
         this[key] = v;
         return v;
-      }
+      };
       constructor.prototype["get" + accessorKey] = function() {
         return this[key];
-      }
+      };
     });
 
     constructor.prototype._initialize = function(args) {
       var self = this;
 
-      ObjectB.eachKV(spec.instanceAttr(), function(key, val) {
+      eachKV(spec.instanceAttr(), function(key, val) {
         self[key] = val;
       });
 
-    }
+    };
 
   },
 
@@ -182,6 +135,59 @@ ObjectB.Class = {
 
 };
 
+function ucfirst(str) {
+  var length = str.length;
+  if (0 === length) {
+    return "";
+  } else if (1 === length) {
+    return str.toUpperCase();
+  }
+  var first = str.charAt(0);
+  var rest  = str.slice(1);
+  return first.toUpperCase() + rest;
+}
 
-})();
+function is(obj, constructorName) {
+  return !!(obj && constructorName === (obj.constructor.name));
+}
+
+function isObject(obj) {
+  return is(obj, 'Object');
+}
+
+function isFunction(obj) {
+  return is(obj, 'Function');
+}
+
+function eachKV(obj, fn) {
+  if (!isObject(obj)) {
+    return;
+  }
+  for (var key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      fn.call(obj, key, obj[key]);
+    }
+  }
+  return obj;
+}
+
+function extend(dst, src) {
+  eachKV(src, function(key, val) {
+    dst[key] = val;
+  });
+  return dst;
+}
+
+
+
+module.exports = {
+  ucfirst: ucfirst,
+  isObject: isObject,
+  eachKV: eachKV,
+  extend: extend,
+
+  Spec: ObjectB.Spec,
+  Class: ObjectB.Class
+};
+
 

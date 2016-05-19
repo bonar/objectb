@@ -2,13 +2,13 @@
   "name": "objectb",
   "version": "0.1.0",
   "description": "Old-school OOP on JavaScript",
-  "main": "index.js",
+  "main": "objectb.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/.bin/mocha --reporter spec"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/bonar/objectb.git"
+    "url": "git+https://github.com/bonar/objectb.git"
   },
   "keywords": [
     "object",
@@ -21,7 +21,14 @@
     "url": "https://github.com/bonar/objectb/issues"
   },
   "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-spies": "^0.7.1",
     "grunt": "~0.4.1",
-    "grunt-contrib-jshint": "~0.7.0"
+    "grunt-contrib-jshint": "~0.7.0",
+    "mocha": "^2.4.5"
+  },
+  "homepage": "https://github.com/bonar/objectb#readme",
+  "directories": {
+    "doc": "docs"
   }
 }

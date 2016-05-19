@@ -1,21 +1,25 @@
+var ObjectB = require('../objectb');
+var chai = require('chai')
+var expect = chai.expect;
+chai.use(require('chai-spies'));
 
 describe("Utility", function() {
 
   describe("ucfirst", function() {
 
     it("make first char upper case", function() {
-      expect(ObjectB.ucfirst("foo")).toEqual("Foo");
-      expect(ObjectB.ucfirst("name")).toEqual("Name");
-      expect(ObjectB.ucfirst("Name")).toEqual("Name");
-      expect(ObjectB.ucfirst("NAME")).toEqual("NAME");
+      expect(ObjectB.ucfirst("foo")).to.equal("Foo");
+      expect(ObjectB.ucfirst("name")).to.equal("Name");
+      expect(ObjectB.ucfirst("Name")).to.equal("Name");
+      expect(ObjectB.ucfirst("NAME")).to.equal("NAME");
     });
 
     it("returns upper case string for char", function() {
-      expect(ObjectB.ucfirst("f")).toEqual("F");
+      expect(ObjectB.ucfirst("f")).to.equal("F");
     });
 
     it("returns empty string for empty string", function() {
-      expect(ObjectB.ucfirst("")).toEqual("");
+      expect(ObjectB.ucfirst("")).to.equal("");
     });
 
   });
@@ -23,11 +27,11 @@ describe("Utility", function() {
   describe("isObject", function() {
 
     it("returns true on object", function() {
-      expect(ObjectB.isObject({})).toBeTruthy();
-      expect(ObjectB.isObject([])).toBeFalsy();
-      expect(ObjectB.isObject("")).toBeFalsy();
-      expect(ObjectB.isObject(null)).toBeFalsy();
-      expect(ObjectB.isObject(undefined)).toBeFalsy();
+      expect(ObjectB.isObject({})).to.equal(true);
+      expect(ObjectB.isObject([])).to.equal(false);
+      expect(ObjectB.isObject("")).to.equal(false);
+      expect(ObjectB.isObject(null)).to.equal(false);
+      expect(ObjectB.isObject(undefined)).to.equal(false);
     });
 
   });
@@ -36,22 +40,18 @@ describe("Utility", function() {
 
     it("returns nothing with non-object argument", function() {
       var spiedFn = { callback: function(){} };
-      spyOn(spiedFn, 'callback');
+      chai.spy.on(spiedFn, 'callback');
 
-      var res = ObjectB.eachKV([], spiedFn.callback);
-
-      expect(res).toBeUndefined();
-      expect(spiedFn.callback).not.toHaveBeenCalled();
+      ObjectB.eachKV([], spiedFn.callback);
+      expect(spiedFn.callback).not.have.been.called();
     });
 
     it("doesn't call given function with empty object", function() {
       var spiedFn = { callback: function(){} };
-      spyOn(spiedFn, 'callback');
+      chai.spy.on(spiedFn, 'callback');
 
-      var res = ObjectB.eachKV({}, spiedFn.callback);
-
-      expect(res).toEqual({});
-      expect(spiedFn.callback).not.toHaveBeenCalled();
+      ObjectB.eachKV({}, spiedFn.callback);
+      expect(spiedFn.callback).not.have.been.called();
     });
 
     it("iterates each key value", function() {
@@ -64,11 +64,11 @@ describe("Utility", function() {
           result.push(k);
           result.push(v);
         });
-        expect(result.length).toEqual(4);
-        expect(result[0]).toEqual('name');
-        expect(result[1]).toEqual('bonar');
-        expect(result[2]).toEqual('age');
-        expect(result[3]).toEqual(34);
+        expect(result).to.have.length(4);
+        expect(result[0]).to.equal('name');
+        expect(result[1]).to.equal('bonar');
+        expect(result[2]).to.equal('age');
+        expect(result[3]).to.equal(34);
     });
 
     it("returns iterated object", function() {
@@ -77,7 +77,7 @@ describe("Utility", function() {
           'age'  : 34 
         };
         var res = ObjectB.eachKV(test, function(k, v) {});
-        expect(res).toEqual(test);
+        expect(res).to.equal(test);
     });
 
   });
@@ -90,7 +90,7 @@ describe("Utility", function() {
         ObjectB.extend(test, 1);
         ObjectB.extend(test, null);
 
-        expect(test).toEqual({});
+        expect(test).to.deep.equal({});
     });
 
     it("merge keys", function() {
@@ -106,16 +106,16 @@ describe("Utility", function() {
           3 : 'san'
         };
 
-        expect(ObjectB.extend({}, a)).toEqual(a);
+        expect(ObjectB.extend({}, a)).to.deep.equal(a);
 
         var ab = ObjectB.extend(a, b);
-        expect(ab).toEqual({
+        expect(ab).to.deep.equal({
           1 : 'one',
           2 : 'two',
           3 : 'three'
         });
 
-        expect(ObjectB.extend(ab, c)).toEqual({
+        expect(ObjectB.extend(ab, c)).to.deep.equal({
           1 : 'ichi',
           2 : 'two',
           3 : 'san'
